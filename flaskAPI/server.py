@@ -132,7 +132,7 @@ def delete_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     db.session.delete(user)
     db.session.commit()
-    return jsonify({"message": "user deleted successfuly"})
+    return jsonify({"message": f"user with id {user_id} deleted successfuly"}), 200
 
 
 @app.route("/user/<user_id>", methods=["POST"])
