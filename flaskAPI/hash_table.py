@@ -39,7 +39,7 @@ class HashTable:
         if self.hash_table[hashed_key] is not None:
             node = self.hash_table[hashed_key]
             if node.next_node is None:
-                return node.value
+                return node.data.value
             while node.next_node:
                 if key == node.data.key:
                     return node.data.value
@@ -69,13 +69,13 @@ class HashTable:
                 print(f"   [{index}] {str(value)}")
         print("}")
 
-ht = HashTable(4)         
-ht.add_key_value("hi", "there")
-ht.add_key_value("dog", "there")
-ht.add_key_value("hi", "there")
-ht.add_key_value("tar", "there")
-ht.add_key_value("hi", "there")
-ht.add_key_value("guy", "there")
-ht.add_key_value("tom", "there")
+# ht = HashTable(4)         
+# ht.add_key_value("hi", "there")
+# ht.add_key_value("dog", "there")
+# ht.add_key_value("hi", "there")
+# ht.add_key_value("tar", "there")
+# ht.add_key_value("hi", "there")
+# ht.add_key_value("guy", "there")
+# ht.add_key_value("tom", "there")
 
-ht.print_hash_table()
+# ht.print_hash_table()
