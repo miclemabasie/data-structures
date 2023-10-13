@@ -11,6 +11,9 @@ import linked_list
 from random import randrange
 from faker import Faker
 from hash_table import HashTable
+from binary_search_tree import BinarySearchTree
+import random
+
 
 
 now = datetime.now()
@@ -162,15 +165,30 @@ def create_blog_post(user_id):
     db.session.add(new_blog_post)
     db.session.commit()
 
-    return jsonify({"message": "User created successfuly"})
+    return jsonify({"message": f"Blog Post created successfuly by user with id {user_id}"})
 
 @app.route("/blog_post", methods=["POST"])
 def get_all_blog_posts():
     pass
 
-@app.route("/blog_post/<blog_post_id>", methods=["POST"])
-def get_one_blog_post():
-    pass
+@app.route("/blog_posts/<blog_post_id>", methods=["GET"])
+def get_one_blog_post(blog_post_id):
+    blog_posts = BlogPost.query.all()
+    random.shuffle(blog_posts)
+    bst = BinarySearchTree()
+    for post in blog_posts:
+        bst.insert({
+            "id": post.id,
+            "title": post.title,
+            "body": post.body,
+            "user_id": post.user_id
+        })
+        
+    post = bst.search(blog_post_id)
+    if not post:
+        return jsonify({"message": "Post not found"})
+    return jsonify(post)
+    
 
 @app.route("/blog_post/<blog_post_id>", methods=["DELETE"])
 def delete_blog_post():
