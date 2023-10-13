@@ -56,7 +56,6 @@ class BinarySearchTree:
     def _search_recursive(self, blog_post_id, node):
         if int(node.data["id"]) == blog_post_id:
             post = node.data
-            print("true is returned here: ", post)
             return post
         elif blog_post_id < int(node.data["id"]):
             if node.left:

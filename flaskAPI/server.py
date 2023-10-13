@@ -12,6 +12,8 @@ from random import randrange
 from faker import Faker
 from hash_table import HashTable
 from binary_search_tree import BinarySearchTree
+from custom_q import Queue
+from stack import Stack
 import random
 
 
@@ -167,9 +169,34 @@ def create_blog_post(user_id):
 
     return jsonify({"message": f"Blog Post created successfuly by user with id {user_id}"})
 
-@app.route("/blog_post", methods=["POST"])
+@app.route("/blog_posts/numeric/numeric_body", methods=["GET"])
 def get_all_blog_posts():
-    pass
+    blog_posts = BlogPost.query.all()
+    q = Queue()
+
+    for post in blog_posts:
+        q.enqueue(post)
+
+    returned_list = []
+    for _ in range(len(blog_posts)):
+        post = q.dequeue()
+        numeric_body = 0
+        for char in post.data.body:
+            numeric_body += ord(char)
+        
+        post.data.body = numeric_body
+        returned_list.append(
+            {
+                "id": post.data.id,
+                "title": post.data.title,
+                "body": post.data.body,
+                "user_id": post.data.user_id
+            }
+        )
+    if len(returned_list) > 0:
+        return jsonify(returned_list)
+    return jsonify({"message": "No posts"})
+
 
 @app.route("/blog_posts/<blog_post_id>", methods=["GET"])
 def get_one_blog_post(blog_post_id):
@@ -190,9 +217,23 @@ def get_one_blog_post(blog_post_id):
     return jsonify(post)
     
 
-@app.route("/blog_post/<blog_post_id>", methods=["DELETE"])
-def delete_blog_post():
-    pass
+@app.route("/blog_post/delete_last_10", methods=["DELETE"])
+def delete_last_10():
+    blog_posts = BlogPost.query.all()
+    s = Stack()
+    for post in blog_posts:
+        s.push(post)
+    
+    quantity = 10
+    if len(blog_posts) < 10:
+        quantity = len(blog_posts)
+    for _ in range(quantity):
+        post_to_delete = s.remove_from_stack()
+        print("$$$$$$", post_to_delete.data)
+        db.session.delete(post_to_delete.data)
+        db.session.commit()
+    
+    return jsonify({"message": "Last 10 posts deleted"})
 
 def create_dumy_data():
     # create dummy users
